@@ -109,17 +109,8 @@ func TestPostPostsRoute(t *testing.T) {
 func TestDeletePostsRoute(t *testing.T) {
     router := setupRouter()
 
-    new_post := map[string]interface{}{
-        "title": "A New Post",
-        "author": "Brian H",
-        "content": "I'm a test",
-        "timestamp": "2022-04-27T6:11Z",
-    }
-
-    body, _ := json.Marshal(new_post)
-
     w := httptest.NewRecorder()
-    req, _ := http.NewRequest("DELETE", "/posts/3", bytes.NewReader(body))
+    req, _ := http.NewRequest("DELETE", "/posts/3", nil)
     router.ServeHTTP(w, req)
 
     assert.Equal(t, 200, w.Code)
@@ -382,6 +373,177 @@ func TestPostNestedCommentOnNestedCommentRoute(t *testing.T) {
                             }
                         ]
                     }
+                ]
+            }
+        ]
+    }`
+
+    get_req, _ := http.NewRequest("GET", "/posts/2", nil)
+    router.ServeHTTP(w, get_req)
+
+    assert.Equal(t, 200, w.Code)
+
+    ja := jsonassert.New(t)
+    ja.Assertf(w.Body.String(), expected)
+}
+
+func TestGetNestedCommentRoute(t *testing.T) {
+    router := setupRouter()
+
+    w := httptest.NewRecorder()
+    req, _ := http.NewRequest("GET", "/comments/2", nil)
+    router.ServeHTTP(w, req)
+
+    assert.Equal(t, 200, w.Code)
+
+    expected := `
+    {
+        "id": 2,
+        "Body": {
+            "author": "Brian H",
+            "content": "I'm a Nested comment",
+            "timestamp": "2022-04-27T6:11Z",
+            "ref_id": 1,
+            "ref_type": "comment"
+        },
+        "Comments": [
+            {
+                "id": 3,
+                "Body": {
+                    "author": "Brian H",
+                    "content": "I'm a Nested comment on a nested comment",
+                    "timestamp": "2022-04-27T6:11Z",
+                    "ref_id": 2,
+                    "ref_type": "comment"
+                },
+                "Comments": null
+            }
+        ]
+    }`
+    ja := jsonassert.New(t)
+    ja.Assertf(w.Body.String(), expected)
+}
+
+func TestPutNestedCommentOnNestedCommentRoute(t *testing.T) {
+    router := setupRouter()
+
+    new_post := map[string]interface{}{
+        "author": "Brian H - Modified",
+        "content": "I'm a Modified Nested comment on a nested comment",
+        "timestamp": "2022-04-27T6:11Z",
+    }
+
+    body, _ := json.Marshal(new_post)
+
+    w := httptest.NewRecorder()
+    req, _ := http.NewRequest("PUT", "/comments/3", bytes.NewReader(body))
+    router.ServeHTTP(w, req)
+
+    assert.Equal(t, 200, w.Code)
+
+    putExpected := `
+    {
+        "id": 3,
+        "Body": {
+            "author": "Brian H - Modified",
+            "content": "I'm a Modified Nested comment on a nested comment",
+            "timestamp": "2022-04-27T6:11Z",
+            "ref_id": 2,
+            "ref_type": "comment"
+        },
+        "Comments": null
+    }`
+
+    ja := jsonassert.New(t)
+    ja.Assertf(w.Body.String(), putExpected)
+
+    // Requesting Post #2 to ensure changes were actually propagated
+    wFinal := httptest.NewRecorder()
+    get_req, _ := http.NewRequest("GET", "/posts/2", nil)
+    router.ServeHTTP(wFinal, get_req)
+
+    assert.Equal(t, 200, wFinal.Code)
+
+    expected := `
+    {
+        "id": 2,
+        "Body": {
+            "title": "Another Post Modified",
+            "author": "Brian H - Mod",
+            "content": "I'm a test modificiation",
+            "timestamp": "2022-04-27T5:51Z"
+        },
+        "Comments": [
+            {
+                "id": 1,
+                "Body": {
+                    "author": "Brian H",
+                    "content": "I'm a comment",
+                    "timestamp": "2022-04-27T6:11Z",
+                    "ref_id": 2,
+                    "ref_type": "post"
+                },
+                "Comments": [
+                    {
+                        "id": 2,
+                        "Body": {
+                            "author": "Brian H",
+                            "content": "I'm a Nested comment",
+                            "timestamp": "2022-04-27T6:11Z",
+                            "ref_id": 1,
+                            "ref_type": "comment"
+                        },
+                        "Comments": [
+                            {
+                                "id": 3,
+                                "Body": {
+                                    "author": "Brian H - Modified",
+                                    "content": "I'm a Modified Nested comment on a nested comment",
+                                    "timestamp": "2022-04-27T6:11Z",
+                                    "ref_id": 2,
+                                    "ref_type": "comment"
+                                },
+                                "Comments": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }`
+
+    ja.Assertf(wFinal.Body.String(), expected)
+}
+
+func TestDeleteNestedCommenRoute(t *testing.T) {
+    router := setupRouter()
+
+    w := httptest.NewRecorder()
+    req, _ := http.NewRequest("DELETE", "/comments/2", nil)
+    router.ServeHTTP(w, req)
+
+    assert.Equal(t, 200, w.Code)
+
+    expected := `
+    {
+        "id": 2,
+        "Body": {
+            "title": "Another Post Modified",
+            "author": "Brian H - Mod",
+            "content": "I'm a test modificiation",
+            "timestamp": "2022-04-27T5:51Z"
+        },
+        "Comments": [
+            {
+                "id": 1,
+                "Body": {
+                    "author": "Brian H",
+                    "content": "I'm a comment",
+                    "timestamp": "2022-04-27T6:11Z",
+                    "ref_id": 2,
+                    "ref_type": "post"
+                },
+                "Comments": [
                 ]
             }
         ]

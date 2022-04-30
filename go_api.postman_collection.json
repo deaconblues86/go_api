@@ -25,6 +25,25 @@
 			"response": []
 		},
 		{
+			"name": "Get Post",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/posts/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"posts",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Post Post",
 			"request": {
 				"method": "POST",
@@ -46,6 +65,34 @@
 					"port": "8080",
 					"path": [
 						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Post",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/posts/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"posts",
+						"2"
 					]
 				}
 			},
@@ -106,6 +153,34 @@
 			"response": []
 		},
 		{
+			"name": "Update Post",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Another Post Modified\",\r\n    \"author\": \"Brian H - Mod\",\r\n    \"content\": \"I'm a test modificiation\",\r\n    \"timestamp\": \"2022-04-27T5:51Z\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/posts/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"posts",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Add Nested Comment on Comment on Comment",
 			"request": {
 				"method": "POST",
@@ -160,18 +235,18 @@
 			"response": []
 		},
 		{
-			"name": "Get Post",
+			"name": "Get Nested Comment",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/posts/2",
+					"raw": "localhost:8080/comments/2",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"posts",
+						"comments",
 						"2"
 					]
 				}
@@ -179,13 +254,13 @@
 			"response": []
 		},
 		{
-			"name": "Update Post",
+			"name": "Update Nested Comment",
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Another Post Modified\",\r\n    \"author\": \"Brian H - Mod\",\r\n    \"content\": \"I'm a test modificiation\",\r\n    \"timestamp\": \"2022-04-27T5:51Z\"\r\n}",
+					"raw": "{\r\n    \"author\": \"Brian H - Modified\",\r\n    \"content\": \"I'm a modified nested comment\",\r\n    \"timestamp\": \"2022-04-27T5:51Z\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -193,13 +268,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/posts/2",
+					"raw": "localhost:8080/comments/2",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"posts",
+						"comments",
 						"2"
 					]
 				}
@@ -207,7 +282,7 @@
 			"response": []
 		},
 		{
-			"name": "Delete Post",
+			"name": "Delete Nested Comment",
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -221,14 +296,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/posts/2",
+					"raw": "localhost:8080/comments/3",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"posts",
-						"2"
+						"comments",
+						"3"
 					]
 				}
 			},

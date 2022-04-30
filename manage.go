@@ -3,7 +3,7 @@ package main
 
 import (
     "fmt"
-    "rsc.io/quote"
+    "strconv"
     "net/http"
     "github.com/gin-gonic/gin"
 )
@@ -50,6 +50,56 @@ func getPosts(c *gin.Context) {
     c.IndentedJSON(http.StatusOK, posts)
 }
 
+
+func getPost(c *gin.Context) {
+    id, _ := strconv.Atoi(c.Param("id"))
+
+    for _, p := range posts {
+        if p.ID == id {
+            c.IndentedJSON(http.StatusOK, p)
+            return
+        }
+    }
+    c.IndentedJSON(http.StatusNotFound, gin.H{"message": "post not found"})
+}
+
+
+func putPost(c *gin.Context) {
+    id, _ := strconv.Atoi(c.Param("id"))
+
+    for i, p := range posts {
+        if p.ID == id {
+            if err := c.BindJSON(& posts[i].Body); err != nil {
+                return
+            }
+            c.IndentedJSON(http.StatusOK, posts[i])
+            return
+        }
+    }
+    c.IndentedJSON(http.StatusNotFound, gin.H{"message": "post not found"})
+}
+
+
+func deletePost(c *gin.Context) {
+    id, _ := strconv.Atoi(c.Param("id"))
+
+    reqIndex := -1
+    for i, p := range posts {
+        if p.ID == id {
+            reqIndex = i
+            break
+        }
+    }
+
+    if reqIndex == -1 {
+        c.IndentedJSON(http.StatusNotFound, gin.H{"message": "post not found"})
+        return
+    }
+    newPosts := removePost(posts, reqIndex)
+    posts = newPosts
+}
+
+
 func postPosts(c *gin.Context) {
     var newPost postBody
 
@@ -68,6 +118,7 @@ func postPosts(c *gin.Context) {
     c.IndentedJSON(http.StatusCreated, realizedPost)
 }
 
+
 func postComments(c *gin.Context) {
     var newComment commentBody
 
@@ -83,19 +134,29 @@ func postComments(c *gin.Context) {
     traverseItems(posts, realizedComment)
 }
 
+
+func setupRouter() *gin.Engine {
+    router := gin.Default()
+
+    router.GET("/posts", getPosts)
+    router.POST("/posts", postPosts)
+
+    router.GET("/posts/:id", getPost)
+    router.PUT("/posts/:id", putPost)
+    router.DELETE("/posts/:id", deletePost)
+
+    router.POST("/comments", postComments)
+
+    return router
+}
+
+
 var posts = []post {
     {ID: 1, Body: postBody{Title: "Test Post", Author: "Brian H", Content: "I'm a test", Timestamp: "2022-04-27T5:49Z"}},
     {ID: 2, Body: postBody{Title: "Another Post", Author: "Brian H", Content: "I'm a test", Timestamp: "2022-04-27T5:51Z"}},
 }
 
 func main() {
-    fmt.Println(quote.Go())
-
-    router := gin.Default()
-
-    router.GET("/posts", getPosts)
-    router.POST("/posts", postPosts)
-    router.POST("/comments", postComments)
-
-    router.Run("localhost:8080")
+    r := setupRouter()
+    r.Run("localhost:8080")
 }

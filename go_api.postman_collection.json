@@ -139,7 +139,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"author\": \"Brian H\",\r\n    \"content\": \"I'm a Nested comment\",\r\n    \"timestamp\": \"2022-04-27T6:11Z\",\r\n    \"ref_id\": 4,\r\n    \"ref_type\": \"comment\"\r\n}",
+					"raw": "{\r\n    \"author\": \"Brian H\",\r\n    \"content\": \"I'm a Nested comment\",\r\n    \"timestamp\": \"2022-04-27T6:11Z\",\r\n    \"ref_id\": 3,\r\n    \"ref_type\": \"comment\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -154,6 +154,81 @@
 					"port": "8080",
 					"path": [
 						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Post",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/posts/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"posts",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Post",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Another Post Modified\",\r\n    \"author\": \"Brian H - Mod\",\r\n    \"content\": \"I'm a test modificiation\",\r\n    \"timestamp\": \"2022-04-27T5:51Z\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/posts/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"posts",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Post",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/posts/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"posts",
+						"2"
 					]
 				}
 			},

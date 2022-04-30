@@ -3,6 +3,26 @@ package main
 import "fmt"
 
 
+func removePost(orig []post, index int) []post {
+    ret := make([]post, 0)
+    origLength := len(orig)
+
+    fmt.Println(index)
+    fmt.Println(origLength)
+
+    if index < 0 || index > origLength - 1 {
+        return nil
+    }
+    ret = append(ret, orig[:index]...)
+
+    if origLength < index + 1 {
+        return ret
+    }
+
+    return append(ret, orig[index+1:]...)
+}
+
+
 func findMaxPostID(posts []post) int {
     maxID := 0
     for _, post := range posts {
@@ -65,7 +85,6 @@ func traverseItems(posts []post, newComment comment) {
     for i := range posts {
         if posts[i].ID == newComment.Body.RefID && newComment.Body.RefType == "post" {
             posts[i].AddComment(newComment)
-            fmt.Println(posts[i].Comments)
             break
         } else {
             traverseComments(posts[i].Comments, newComment)

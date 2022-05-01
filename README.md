@@ -1,4 +1,4 @@
-# go_api
+# Go API
 Simple Blog API
 
 Includes APIs to:
@@ -6,6 +6,12 @@ Includes APIs to:
 - All CRUD operations on blog posts
 - All CRUD operations on comments to a blog post or comments to a comment
 
+## Installation
+- Install Go 1.18
+- Clone repository into desired location
+- Within the newly created folder, execute `go run .` to start server
+  - Note:  All data is currently stored in memory
+- To execute unit tests, run `go test` from the root of the repository
 
 ## Get Posts
 

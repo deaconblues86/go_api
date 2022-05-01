@@ -50,7 +50,7 @@ func removePost(orig []post, index int) []post {
     origLength := len(orig)
 
     if index < 0 || index > origLength - 1 {
-        return nil
+        return orig
     }
     ret = append(ret, orig[:index]...)
 
@@ -67,7 +67,7 @@ func removeComment(orig []comment, index int) []comment {
     origLength := len(orig)
 
     if index < 0 || index > origLength - 1 {
-        return nil
+        return orig
     }
     ret = append(ret, orig[:index]...)
 
